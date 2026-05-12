@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Audit Verifikasi SDM</h4>
+            </div>
+            <div class="card-body">
+                <h5>Informasi Perjalanan</h5>
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <p class="mb-1 text-muted">Maksud Tujuan:</p>
+                        <p class="fw-bold">{{ p.maksud_tujuan }}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-1 text-muted">Rute:</p>
+                        <p class="fw-bold">{{ p.kota_asal.nama }} &rarr; {{ p.kota_tujuan.nama }}</p>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <p class="mb-1 text-muted">Tanggal Berangkat:</p>
+                        <p class="fw-bold">{{ p.tgl_berangkat.strftime('%d %b %Y') }}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="mb-1 text-muted">Tanggal Pulang:</p>
+                        <p class="fw-bold">{{ p.tgl_pulang.strftime('%d %b %Y') }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5>Audit Perhitungan Keuangan</h5>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item d-flex justify-content-between">
+                        Durasi Perjalanan <span>{{ p.durasi_hari }} Hari</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        Jarak Tempuh <span>{{ p.jarak_km }} KM</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <strong>Kategori Allowance:</strong>
+                        <span class="text-end">
+                            {% if p.kota_tujuan.is_luar_negeri %}
+                                Luar Negeri (USD 50/hari)
+                            {% elif p.jarak_km <= 60 %}
+                                Dalam Kota / Jarak &le; 60km (Rp 0)
+                            {% elif p.kota_asal.provinsi == p.kota_tujuan.provinsi %}
+                                Dalam Provinsi > 60km (Rp 200,000/hari)
+                            {% elif p.kota_asal.pulau == p.kota_tujuan.pulau %}
+                                Luar Provinsi, Satu Pulau (Rp 250,000/hari)
+                            {% else %}
+                                Luar Pulau (Rp 300,000/hari)
+                            {% endif %}
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between text-primary">
+                        <h5 class="mb-0">Total Uang Saku:</h5>
+                        <h5 class="mb-0">
+                            {% if p.kota_tujuan.is_luar_negeri %}
+                                $ {{ "{:,.0f}".format(p.total_uang_saku) }}
+                            {% else %}
+                                Rp {{ "{:,.0f}".format(p.total_uang_saku) }}
+                            {% endif %}
+                        </h5>
+                    </li>
+                </ul>
+
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('approve_perdin', id=p.id, action='Approve') }}" class="btn btn-success flex-grow-1">Approve Pengajuan</a>
+                    <a href="{{ url_for('approve_perdin', id=p.id, action='Reject') }}" class="btn btn-danger flex-grow-1">Reject</a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>Edit Perdin (Admin Mode)</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Maksud Tujuan</label>
+                        <textarea name="maksud" class="form-control" required>{{ p.maksud_tujuan }}</textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>Berangkat</label>
+                            <input type="date" name="tgl_berangkat" class="form-control" value="{{ p.tgl_berangkat }}" required>
+                        </div>
+                        <div class="col">
+                            <label>Pulang</label>
+                            <input type="date" name="tgl_pulang" class="form-control" value="{{ p.tgl_pulang }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Kota Asal</label>
+                        <select name="kota_asal" class="form-select">
+                            {% for kota in kotas %}
+                            <option value="{{ kota.id }}" {{ 'selected' if kota.id == p.kota_asal_id }}>{{ kota.nama }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Kota Tujuan</label>
+                        <select name="kota_tujuan" class="form-select">
+                            {% for kota in kotas %}
+                            <option value="{{ kota.id }}" {{ 'selected' if kota.id == p.kota_tujuan_id }}>{{ kota.nama }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Data</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

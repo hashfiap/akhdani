@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>{{ 'Edit' if kota else 'Tambah' }} Kota</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Nama Kota</label>
+                        <input type="text" name="nama" class="form-control" value="{{ kota.nama if kota }}" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>Latitude</label>
+                            <input type="number" step="any" name="lat" class="form-control" value="{{ kota.latitude if kota }}" required>
+                        </div>
+                        <div class="col">
+                            <label>Longitude</label>
+                            <input type="number" step="any" name="lon" class="form-control" value="{{ kota.longitude if kota }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Provinsi</label>
+                        <input type="text" name="provinsi" class="form-control" value="{{ kota.provinsi if kota }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Pulau</label>
+                        <input type="text" name="pulau" class="form-control" value="{{ kota.pulau if kota }}" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" name="is_luar_negeri" class="form-check-input" id="lnCheck" {{ 'checked' if kota and kota.is_luar_negeri }}>
+                        <label class="form-check-label" for="lnCheck">Luar Negeri (USD 50/hari)</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Simpan Kota</button>
+                    <a href="{{ url_for('master_kota') }}" class="btn btn-link w-100 mt-2">Batal</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

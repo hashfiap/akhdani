@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3>Tambah Perdin</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Maksud Tujuan</label>
+                        <textarea name="maksud" class="form-control" required></textarea>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label>Tanggal Berangkat</label>
+                            <input type="date" name="tgl_berangkat" id="tgl_berangkat" class="form-control" required>
+                        </div>
+                        <div class="col">
+                            <label>Tanggal Pulang</label>
+                            <input type="date" name="tgl_pulang" id="tgl_pulang" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info py-2 d-none" id="duration-display">
+                        Estimasi Durasi: <strong id="total-days">0</strong> Hari
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Kota Asal</label>
+                        <select name="kota_asal" class="form-select">
+                            {% for kota in kotas %}<option value="{{ kota.id }}">{{ kota.nama }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Kota Tujuan</label>
+                        <select name="kota_tujuan" class="form-select">
+                            {% for kota in kotas %}<option value="{{ kota.id }}">{{ kota.nama }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Simpan Pengajuan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const startInput = document.getElementById('tgl_berangkat');
+    const endInput = document.getElementById('tgl_pulang');
+    const display = document.getElementById('duration-display');
+    const daysText = document.getElementById('total-days');
+
+    function calculateDays() {
+        const startDate = new Date(startInput.value);
+        const endDate = new Date(endInput.value);
+
+        if (startInput.value && endInput.value) {
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            if (diffDays > 0) {
+                display.classList.remove('d-none');
+                daysText.innerText = diffDays;
+            } else {
+                display.classList.add('d-none');
+            }
+        }
+    }
+
+    startInput.addEventListener('change', calculateDays);
+    endInput.addEventListener('change', calculateDays);
+</script>
+{% endblock %}
